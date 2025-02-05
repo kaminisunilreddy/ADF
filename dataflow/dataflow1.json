@@ -6,18 +6,46 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_emp",
+						"referenceName": "empds",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_dept",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "split1"
+				}
+			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          empid as string,",
+				"          name as string,",
+				"          country as string,",
+				"          deparment as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1"
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          departmentid as string,",
+				"          name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source2",
+				"source1 split(equals(deparment, '1'),",
+				"     equals(deparment, '2'),",
+				"     equals(deparment, '3'),",
+				"     disjoint: false) ~> split1@(HR, Accounts, Logistics)"
 			]
 		}
 	}
