@@ -10,16 +10,31 @@
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
 				},
 				{
 					"dataset": {
-						"referenceName": "ds_dept",
+						"referenceName": "ds_output",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_output",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
 				}
 			],
-			"sinks": [],
 			"transformations": [
 				{
 					"name": "split1"
@@ -35,17 +50,31 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source(output(",
-				"          departmentid as string,",
-				"          name as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source2",
 				"source1 split(equals(deparment, '1'),",
 				"     equals(deparment, '2'),",
 				"     equals(deparment, '3'),",
-				"     disjoint: false) ~> split1@(HR, Accounts, Logistics)"
+				"     disjoint: false) ~> split1@(HR, Accounts, Logistics)",
+				"split1@HR sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"split1@Accounts sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2",
+				"split1@Logistics sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink3"
 			]
 		}
 	}
